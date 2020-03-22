@@ -3,7 +3,7 @@
 <title>infection</title>
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 <body>
-<h1 align='center'>infection particle simulation</h1>
+<h1>Infection particle simulation</h1>
 <table>
 <tr><td>
 <canvas id="simcvs" width=600 height=600 style="border:1px solid #000000">
@@ -66,7 +66,94 @@
 <p>
     This simulation shows why you need to STAY@HOME whenever an infectious
     disease outbreak occurs. <br>
-    All quantities are unitless.
+    All quantities are unitless. <br>
+    Color code: <font style="color:#00FF00">GREEN</font> healthy; 
+    <font style="color:#FF0000">RED</font> ill.
+
+<h2>Simulation method</h2> 
+
+<p> 
+We take a number of noninteracting particles moving with random velocity
+inside a container.  The illness level (health level) of every particles is
+recorded as a number between 0 to 100 which represents healthy to very sick
+condition.  Every time a particle getting too close to another particle, its
+health level will decrease according to the condition of the other particle. 
+A contact between two healthy particles will not change the health
+conditions.  The distance that may infect a healthy particle is defined by
+the expossure distance.
+
+<p> 
+There is a chance that an ill particle become healthier (defined by the
+cure-probability), however, once a particle become infected, the condition
+will be worsened as a function of time.  The rate of change of the health
+condition is defined by the infection growth time and the health worsen
+probability.
+
+<h2>Parameters</h2>
+<table style="border: 1px solid black;">
+<thead>
+<tr>
+<th style="text-align: left;">name</th>
+<th style="text-align: left;">meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">population density</td>
+<td style="text-align: left;">the number of particles</td>
+</tr>
+<tr>
+<td style="text-align: left;">initial infected</td>
+<td style="text-align: left;">the number of initially infected particles</td>
+</tr>
+<tr>
+<td style="text-align: left;">health worsening probability</td>
+<td style="text-align: left;">the probability that a particle <br>health level decreases</td>
+</tr>
+<tr>
+<td style="text-align: left;">cure probability</td>
+<td style="text-align: left;">the probability that a particle can recover</td>
+</tr>
+<tr>
+<td style="text-align: left;">infection growth time</td>
+<td style="text-align: left;">the time that the change of healt level evaluated</td>
+</tr>
+<tr>
+<td style="text-align: left;">expossure radius</td>
+<td style="text-align: left;">the distance limit that a particle <br>can infect other particle
+</tr>
+</tbody>
+</table>
+<h2>Measurements</h2>
+<p>This simulation does not use any measurement units. So the data can be interpretated as is.
+<table style="border: 1px solid black;">
+<thead>
+<tr>
+<th style="text-align: left;">name</th>
+<th style="text-align: left;">meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">time</td>
+<td style="text-align: left;">elapsed simulation time</td>
+</tr>
+<tr>
+<td style="text-align: left;">#infected</td>
+<td style="text-align: left;">the number of infected particles</td>
+</tr>
+<tr>
+<td style="text-align: left;">#cured</td>
+<td style="text-align: left;">the number of healing particles</td>
+</tr>
+<tr>
+<td style="text-align: left;">infected level</td>
+<td style="text-align: left;">the sum of illness condition of all particles <br>devided by the
+</tr>
+</tbody>
+</table>
+
+
     
     <br><br><hr>
     Created by Yudi Rosandi, Dept. Geophysics, Universitas Padjadjaran<br>
