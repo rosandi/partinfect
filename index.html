@@ -1,0 +1,78 @@
+<html>
+<head>
+<title>infection</title>
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<body>
+<h1 align='center'>infection particle simulation</h1>
+<table>
+<tr><td>
+<canvas id="simcvs" width=600 height=600 style="border:1px solid #000000">
+</canvas>
+</td><td valign="bottom">
+    
+<table>
+    <tr><td>
+        <div id="stat">
+            time = 0<br>
+            #infected = 0<br>
+            #cured = 0<br>
+            infection level = 0
+        </div>
+    </td></tr>
+    <tr><td>
+        <div id="plot"></div>
+    </td></tr>
+        
+    <tr><td>
+        
+    <!-- INPUTS /-->
+    <p>
+    <label for="density">population density:</label>
+    <input type="number" id="density" min="5" max="500" value="200">
+    <br>
+    <label for="pworse">health worsening probability (%):</label>
+    <input type="number" id="pworse" min="0" max="100" value="75">
+    <br>
+    <label for="pcure">cure probability (%):</label>
+    <input type="number" id="pcure" min="0" max="100" value="25">
+    <br>
+    <label for="pcure">infection growth time:</label>
+    <input type="number" id="rateinv" min="0" max="50" value="10"> 
+    <br>
+    <label for="xrad">expossure radius:</label>
+    <input type="number" id="xrad" min="0" max="500" value="5">    
+    <br>
+    <label for="initinf">initial infected:</label>
+    <input type="number" id="initinf" min="0" max="10" value="1">    
+    </p>
+    
+    <!-- CONTROL BUTTONS /-->
+        <p>
+        <br>
+        <button onclick="restart()">restart</button>
+        <button onclick="runpause()">run/pause</button>
+        </p>
+
+    </td></tr>
+    
+</table>
+
+</td></tr>
+</table>
+
+
+<script src="simcvs.js"></script>
+
+<p>
+    This simulation shows why you need to STAY@HOME whenever an infectious
+    disease outbreak occurs. <br>
+    All quantities are unitless.
+    
+    <br><br><hr>
+    Created by Yudi Rosandi, Dept. Geophysics, Universitas Padjadjaran<br>
+    Inspired by the idea of Philipp Umstaetter (Dept. Physik, TU-Kaiserslautern)
+    <br>
+    Comments can be sent to: rosandi@geophys.unpad.ac.id
+</p>
+</body>
+</html>
