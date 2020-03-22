@@ -1,0 +1,5 @@
+#!/bin/bash
+
+serverpath=craw:/var/www/html/sims/
+
+rsync -vP index.html simcvs.js $serverpath
