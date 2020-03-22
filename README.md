@@ -5,7 +5,7 @@ Infection particle simulation
 ## Simulation method
 
 We take a number of noninteracting particles moving with random velocity inside a container. The illness level (health level) of every particles is recorded as a number between 0 to 100 which represents healthy to very sick condition. Every time a particle getting too close to another particle, its health level will decrease according to the condition of the other particle. A contact between two healthy particles will not change the health conditions. The distance that may infect a healthy particle is defined by the expossure distance. 
-There is a chance that an ill particle become healthier (defined by the cure-probability), however, once a particle become infected, the condition will be worsened as a function of time. The rate of change in the health condition is defined by the infection growth time and the health worsen probability.
+There is a chance that an ill particle become healthier (defined by the cure-probability), however, once a particle become infected, the condition will be worsened as a function of time. The rate of change of the health condition is defined by the infection growth time and the health worsen probability.
 
 ## Parameters
 
