@@ -2,57 +2,107 @@
 <head>
 <title>infection</title>
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<style>
+
+body {
+  font-family: arial, sans-serif;
+  text-align: justify;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 2px;
+}
+p {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.noborder {
+  border: 0px;
+}
+
+</style>
+
 <body>
 <h1>Infection particle simulation</h1>
 <table>
-<tr><td>
+<tr><td class='noborder' valign="top">
 <canvas id="simcvs" width=500 height=500 style="border:1px solid #000000">
 </canvas>
-</td><td valign="bottom">
-    
+<div id="stattime"></div>
+</td><td class='noborder' valign="top">
+
 <table>
-    <tr><td>
-        <div id="stat">
-            time = 0<br>
-            #infected = 0<br>
-            #cured = 0<br>
-            infection level = 0
-        </div>
-    </td></tr>
-    <tr><td>
+<tr><td class='noborder'>
+    <table>
+    <tr>
+    <td>infected</td>
+    <td>uninfected</td>
+    <td>cured</td>
+    <td>death</td>
+    <td>infection level</td>
+    </tr>
+    <tr>
+    <td id='statinfect'></td>
+    <td id='statuninfect'></td>
+    <td id='statcured'></td>
+    <td id='statdeath'></td>
+    <td id='statinflevel'></td>
+    </tr>
+    </table>
+    
+</td></tr>
+<tr><td class='noborder'>
         <div id="plot"></div>
-    </td></tr>
+</td></tr>
         
-    <tr><td>
+    <tr><td class='noborder'>
         
     <!-- INPUTS /-->
-    <p>
+    <table>
+    <tr><td>
     <label for="density">population density:</label>
-    <input type="number" id="density" min="5" max="500" value="200">
-    <br>
+    </td><td>
+    <input type="number" id="density" min="5" max="800" value="200">
+    </td></tr><tr><td>
     <label for="pworse">health worsening probability (%):</label>
+    </td><td>
     <input type="number" id="pworse" min="0" max="100" value="75">
-    <br>
+    </td></tr><tr><td>
     <label for="pcure">cure probability (%):</label>
+    </td><td>
     <input type="number" id="pcure" min="0" max="100" value="25">
-    <br>
+    </td></tr><tr><td>
     <label for="rateinv">infection growth time:</label>
+    </td><td>
     <input type="number" id="rateinv" min="0" max="720" value="500"> 
-    <br>
+    </td></tr><tr><td>
     <label for="xrad">expossure radius:</label>
+    </td><td>
     <input type="number" id="xrad" min="0" max="500" value="2">    
-    <br>
+    </td></tr><tr><td>
     <label for="tincub">incubation time:</label>
-    <input type="number" id="tincub" min="5" max="50000" value="1000">    
-    <br>
+    </td><td>
+    <input type="number" id="tincub" min="5" max="5000" value="1000">    
+    </td></tr><tr><td>
     <label for="initinf">initial infected:</label>
+    </td><td>
     <input type="number" id="initinf" min="0" max="10" value="1">    
-    </p>
+    </td></tr>
+    </table>
     
     <!-- CONTROL BUTTONS /-->
         <p>
-        <button onclick="restart()" style="font-size:18px;">UPDATE</button>
         <button onclick="runpause()"style="font-size:18px;" >RUN/PAUSE</button>
+        <button onclick="restart()" style="font-size:18px;">UPDATE/RESET</button>
         </p>
 
     </td></tr>
@@ -68,7 +118,9 @@
 <p>
     This simulation shows why you need to STAY@HOME whenever an infectious
     disease outbreak occurs. <br>
-    All quantities are unitless. <br>
+    In the calculation all quantities are unitless. The following configuration may be
+    used:<br>
+    TIME: hour <br>DISTANCE: meter.<br>
     Color code: <font style="color:#00FF00">GREEN</font> healthy; 
     <font style="color:#FF0000">RED</font> ill; BLACK dead; <br>
      HAIRY infected; CIRCLED immune; 
@@ -84,19 +136,22 @@ health level will decrease according to the condition of the other particle.
 A contact between two healthy particles will not change the health
 conditions.  The distance that may infect a healthy particle is defined by
 the expossure distance.
+</p>
 <p>
     Once a particle recovers it will be immune to the disease. Hence, 
     it will not be a carrier nor get re-infected. When the illness condition
     exceeds the maximum value, a particle will be considered as dead and immutable.
-    
+</p>
 <p> 
 There is a chance that an ill particle become healthier (defined by the
 cure-probability), however, once a particle become infected, the condition
 will be worsened as a function of time.  The rate of change of the health
 condition is defined by the infection growth time, which is the time required to reach
 the maximum illness value, and the health worsening probability.
+</p>
 
 <h2>Parameters</h2>
+<p>
 <table style="border: 1px solid black;">
 <thead>
 <tr>
@@ -131,8 +186,13 @@ the maximum illness value, and the health worsening probability.
 </tr>
 </tbody>
 </table>
+</p>
+
 <h2>Measurements</h2>
-<p>This simulation does not use any measurement units. So the data can be interpretated as is.
+<p>
+    This simulation does not use any measurement units. So the data can be interpretated as is.
+</p>
+<p>
 <table style="border: 1px solid black;">
 <thead>
 <tr>
@@ -159,10 +219,9 @@ the maximum illness value, and the health worsening probability.
 </tr>
 </tbody>
 </table>
+</p>
 
-
-    
-    <br><br><hr>
+<p><br><hr>
     Created by Yudi Rosandi, Dept. Geophysics, Universitas Padjadjaran<br>
     Inspired by the idea of Philipp Umstaetter (Dept. Physik, TU-Kaiserslautern)
     <br>

@@ -91,7 +91,6 @@ var layout = {
 };
 
 var data=[infarr,noinarr,curarr,deadarr,levarr];
-Plotly.newPlot('plot',data,layout);
 
 function parti(x, y, vx, vy, rad, infval) {
     this.x = Math.floor(x);
@@ -255,6 +254,11 @@ function checkneigh() {
     }
 }
 
+
+function setstatus(elid,txt) {
+    document.getElementById(elid).innerHTML=txt;
+}
+
 function detect() {
     // check the number of infected person
     ninfected=0;
@@ -273,12 +277,14 @@ function detect() {
             if (p[i].sick>0) ninfected++;
         }
     }
+ 
+    setstatus('stattime','time='+nstep);
+    setstatus('statinfect',ninfected);
+    setstatus('statuninfect',noninf);
+    setstatus('statcured',ncured);
+    setstatus('statdeath',ndead);
+    setstatus('statinflevel',(100*infectionlevel/maxinfectionlevel).toFixed(2)+"%");
     
-    document.getElementById("stat").innerHTML=
-    "time="+nstep+
-    "<br>non-infected="+noninf+" infected="+ninfected+
-    "<br>cured="+ncured+" dead="+ndead+
-    "<br>infection level = "+(100*infectionlevel/maxinfectionlevel).toFixed(2)+"%";
 }
 
 
@@ -295,6 +301,7 @@ function update() {
     
     checkneigh();
     detect();
+    nstep++;
     
     if(nstep % plotevery==0) {
         infarr.x.push(nstep);
@@ -310,7 +317,6 @@ function update() {
         noinarr.y.push(100*noninf/npar);
         Plotly.newPlot('plot',data,layout);
     }
-    nstep++;
 
     if(infectionlevel>0.99*maxinfectionlevel) {
         clearInterval(id);
@@ -373,6 +379,7 @@ function restart() {
     delete p;
     initiate();
     update();
+    Plotly.newPlot('plot',data,layout);
 }
 
 restart();
