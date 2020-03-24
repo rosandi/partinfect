@@ -2,4 +2,4 @@
 
 serverpath=craw:/var/www/html/sims/
 
-rsync -vP index.html simcvs.js $serverpath
+rsync -vP index.html simcvs.js collect.php $serverpath

@@ -39,6 +39,7 @@ var noninf;
 var ncured;
 var ninfected;
 var infectionlevel;
+var simends;
 
 var infarr = {
     x: [0],
@@ -158,7 +159,6 @@ function parti(x, y, vx, vy, rad, infval) {
         c=Math.floor((clevel.length-1)*this.sick/maxsick);
         
         if (this.dead) {
-            console.log("im dead");
             ctx.fillStyle = 'black';
             ctx.strokeStyle = 'black';
         } else {
@@ -287,9 +287,44 @@ function detect() {
     
 }
 
-
 var id;
 var running=false;
+
+function checkending() {
+    if(infectionlevel>0.995*maxinfectionlevel) {
+        clearInterval(id);
+        running=false;
+        simends=true;
+    }
+
+    if(ninfected==0) { // all the infected particles are dead... no worries
+        clearInterval(id);
+        running=false;
+        simends=true;
+    }
+    
+    
+    if (simends) {
+        // send data to server
+
+        var dataln=infarr.x.length;
+        var datastr="# time infected uninfected cured dead infectionlevel\n"
+        for (i=0;i<dataln;i++) {
+            datastr+=infarr.x[i]+" ";
+            datastr+=infarr.y[i]+" ";
+            datastr+=noinarr.y[i]+" ";
+            datastr+=curarr.y[i]+" ";
+            datastr+=deadarr.y[i]+" ";
+            datastr+=levarr.y[i].toFixed(2)+"\n";
+        }
+
+        var htreq=new XMLHttpRequest();
+        htreq.open('POST','collect.php',true);
+        htreq.setRequestHeader('Content-Type','text/plain');
+        htreq.send(datastr);
+        //console.log(datastr);
+    }
+}
 
 function update() {
     ctx.fillStyle = "white";
@@ -318,16 +353,7 @@ function update() {
         Plotly.newPlot('plot',data,layout);
     }
 
-    if(infectionlevel>0.99*maxinfectionlevel) {
-        clearInterval(id);
-        running=false;
-    }
-
-    if(ninfected==0) { // all the infected particles are dead... no worries
-        clearInterval(id);
-        running=false;
-    }
-
+    checkending();
 }
 
 //------- control functions -------
@@ -364,6 +390,7 @@ function restart() {
     nimmune = 0;
     nstep = 0;
     delsick=maxsick/rateinv;
+    simends=false;
     
     infarr.x=[0];
     infarr.y=[0];
