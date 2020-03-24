@@ -308,7 +308,10 @@ function checkending() {
         // send data to server
 
         var dataln=infarr.x.length;
-        var datastr="#boxsize "+w+" "+h+"\n";
+        var datastr="#info "+navigator.appName+":"
+                            +navigator.appVersion+":"
+                            +navigator.platform+"\n";
+        datastr+=   "#boxsize "+w+" "+h+"\n";
         datastr+=   "#nparticle "+npar+"\n";
         datastr+=   "#wprob "+worseprobability+"\n";
         datastr+=   "#cprob "+curepropability+"\n";
