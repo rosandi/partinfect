@@ -34,7 +34,8 @@ p {
 
 <body>
 <h1>Infection particle simulation</h1>
-<table>
+
+<table style='width: 800px;'>
 <tr><td class='noborder' valign="top">
 <canvas id="simcvs" width=500 height=500 style="border:1px solid #000000">
 </canvas>
@@ -69,33 +70,33 @@ p {
         
     <!-- INPUTS /-->
     <table>
-    <tr><td width="50%">
+    <tr><td width="50%" class='noborder'>
     <label for="density">population density:</label>
-    </td><td>
+    </td><td class='noborder'>
     <input type="number" id="density" min="5" max="800" value="200">
-    </td></tr><tr><td>
+    </td></tr><tr><td class='noborder'>
     <label for="pworse">health worsening probability (%):</label>
-    </td><td>
+    </td><td class='noborder'>
     <input type="number" id="pworse" min="0" max="100" value="75">
-    </td></tr><tr><td>
+    </td></tr><tr><td class='noborder'>
     <label for="pcure">cure probability (%):</label>
-    </td><td>
+    </td><td class='noborder'>
     <input type="number" id="pcure" min="0" max="100" value="25">
-    </td></tr><tr><td>
+    </td></tr><tr><td class='noborder'>
     <label for="rateinv">infection growth time:</label>
-    </td><td>
+    </td><td class='noborder'>
     <input type="number" id="rateinv" min="0" max="720" value="500"> 
-    </td></tr><tr><td>
+    </td></tr><tr><td class='noborder'>
     <label for="xrad">expossure radius:</label>
-    </td><td>
+    </td><td class='noborder'>
     <input type="number" id="xrad" min="0" max="500" value="2">    
-    </td></tr><tr><td>
+    </td></tr><tr><td class='noborder'>
     <label for="tincub">incubation time:</label>
-    </td><td>
+    </td><td class='noborder'>
     <input type="number" id="tincub" min="5" max="5000" value="1000">    
-    </td></tr><tr><td>
+    </td></tr><tr><td class='noborder'>
     <label for="initinf">initial infected:</label>
-    </td><td>
+    </td><td class='noborder'>
     <input type="number" id="initinf" min="0" max="10" value="1">    
     </td></tr>
     </table>
@@ -112,7 +113,6 @@ p {
 
 </td></tr>
 </table>
-
 
 <script src="simcvs.js"></script>
 
