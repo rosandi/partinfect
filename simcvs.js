@@ -308,7 +308,15 @@ function checkending() {
         // send data to server
 
         var dataln=infarr.x.length;
-        var datastr="# time infected uninfected cured dead infectionlevel\n"
+        var datastr="#boxsize "+w+" "+h+"\n";
+        datastr+=   "#nparticle "+npar+"\n";
+        datastr+=   "#wprob "+worseprobability+"\n";
+        datastr+=   "#cprob "+curepropability+"\n";
+        datastr+=   "#xrad "+rexpos+"\n";
+        datastr+=   "#inctime "+tincub+"\n";
+        datastr+=   "#initinf "+initinfect+"\n";
+        datastr+=   "#FIELDS: time infected uninfected cured dead infectionlevel\n";
+
         for (i=0;i<dataln;i++) {
             datastr+=infarr.x[i]+" ";
             datastr+=infarr.y[i]+" ";
