@@ -428,13 +428,13 @@ function restart() {
     simends=false;
     
     infarr.x=[0];
-    infarr.y=[0];
+    infarr.y=[100*initinfect/npar];
     curarr.x=[0];
     curarr.y=[100*initimmune/npar];
     deadarr.x=[0];
     deadarr.y=[0];
     levarr.x=[0];
-    levarr.y=[0];
+    levarr.y=[100*initinfect*maxsick/2/maxinfectionlevel];
     noinarr.x=[0];
     noinarr.y=[100];
     
