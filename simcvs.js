@@ -34,6 +34,8 @@ var rateinv=500;
 var trecover=10; // time to recover after passing incubation time
 var delsick;
 var delrec;
+var lat=undefined;
+var lon=undefined;
 
 //--- measurement variables
 var ndead;
@@ -306,40 +308,56 @@ function checkending() {
         running=false;
         simends=true;
     }
+}
+
+function plotdata() {
+    infarr.x.push(nstep);
+    curarr.x.push(nstep);
+    deadarr.x.push(nstep);
+    levarr.x.push(nstep);
+    noinarr.x.push(nstep);
+    infarr.y.push(100*ninfected/npar);
+    curarr.y.push(100*ncured/npar);
+    deadarr.y.push(100*ndead/npar);
+    levarr.y.push(100*infectionlevel/maxinfectionlevel);
+    noinarr.y.push(100*noninf/npar);
+    Plotly.newPlot('plot',data,layout);
+}
+
+function savedata() {
+    // send data to server
+    var dataln=infarr.x.length;
+    var datastr="#info "+navigator.appName+":"
+                        +navigator.appVersion+":"
+                        +navigator.platform;
+    if (lat!=undefined) {
+        datastr+=":"+lat+":"+lon+"\n";
+    } else datastr+="\n";
     
-    
-    if (simends) {
-        // send data to server
-
-        var dataln=infarr.x.length;
-        var datastr="#info "+navigator.appName+":"
-                            +navigator.appVersion+":"
-                            +navigator.platform+"\n";
-        datastr+=   "#boxsize "+w+" "+h+"\n";
-        datastr+=   "#nparticle "+npar+"\n";
-        datastr+=   "#wprob "+worseprobability+"\n";
-        datastr+=   "#cprob "+curepropability+"\n";
-        datastr+=   "#xrad "+rexpos+"\n";
-        datastr+=   "#inctime "+tincub+"\n";
-        datastr+=   "#rectime "+trecover+"\n";
-        datastr+=   "#initinf "+initinfect+"\n";
-        datastr+=   "#FIELDS: time infected uninfected cured dead infectionlevel\n";
-
-        for (i=0;i<dataln;i++) {
-            datastr+=infarr.x[i]+" ";
-            datastr+=infarr.y[i]+" ";
-            datastr+=noinarr.y[i]+" ";
-            datastr+=curarr.y[i]+" ";
-            datastr+=deadarr.y[i]+" ";
-            datastr+=levarr.y[i].toFixed(2)+"\n";
-        }
-
-        var htreq=new XMLHttpRequest();
-        htreq.open('POST','collect.php',true);
-        htreq.setRequestHeader('Content-Type','text/plain');
-        htreq.send(datastr);
-        //console.log(datastr);
+    datastr+=   "#boxsize "+w+" "+h+"\n";
+    datastr+=   "#nparticle "+npar+"\n";
+    datastr+=   "#wprob "+worseprobability+"\n";
+    datastr+=   "#cprob "+curepropability+"\n";
+    datastr+=   "#xrad "+rexpos+"\n";
+    datastr+=   "#inctime "+tincub+"\n";
+    datastr+=   "#rectime "+trecover+"\n";
+    datastr+=   "#initinf "+initinfect+"\n";
+    datastr+=   "#FIELDS: time infected uninfected cured dead infectionlevel\n";
+    // all data in percent
+    for (i=0;i<dataln;i++) {
+        datastr+=infarr.x[i]+" ";
+        datastr+=infarr.y[i]+" ";
+        datastr+=noinarr.y[i]+" ";
+        datastr+=curarr.y[i]+" ";
+        datastr+=deadarr.y[i]+" ";
+        datastr+=levarr.y[i].toFixed(2)+"\n";
     }
+
+    var htreq=new XMLHttpRequest();
+    htreq.open('POST','collect.php',true);
+    htreq.setRequestHeader('Content-Type','text/plain');
+    htreq.send(datastr);
+    //console.log(datastr);
 }
 
 function update() {
@@ -352,24 +370,12 @@ function update() {
     
     checkneigh();
     detect();
-    nstep++;
-    
-    if(nstep % plotevery==0) {
-        infarr.x.push(nstep);
-        curarr.x.push(nstep);
-        deadarr.x.push(nstep);
-        levarr.x.push(nstep);
-        noinarr.x.push(nstep);
-        
-        infarr.y.push(100*ninfected/npar);
-        curarr.y.push(100*ncured/npar);
-        deadarr.y.push(100*ndead/npar);
-        levarr.y.push(100*infectionlevel/maxinfectionlevel);
-        noinarr.y.push(100*noninf/npar);
-        Plotly.newPlot('plot',data,layout);
-    }
-
     checkending();
+    nstep++;
+
+    if (simends ||(nstep % plotevery==0)) plotdata();
+    if (simends) savedata();    
+
 }
 
 //------- control functions -------
@@ -425,6 +431,13 @@ function restart() {
     initiate();
     update();
     Plotly.newPlot('plot',data,layout);
+}
+
+if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition=function(position) {
+        lat=position.coords.latitude;
+        lon=position.coords.longitude;
+    });
 }
 
 restart();
