@@ -13,7 +13,7 @@ var ctx = canvas.getContext("2d");
 
 const maxsick=100;
 const fullangle = 2*Math.PI;
-const clevel = ["#33FF3C", "#86FF33", "#86FF33", "#FFDD33", "#FFDD33", "#FF3C33"];
+const clevel = ["#33FF3C", "#86FF33", "#86FF33", "#FFDD33", "#FFDD33", "#FF3C33", "#000000"];
 const w = canvas.width;
 const h = canvas.height;
 const maxvel=2;
@@ -30,8 +30,10 @@ var curepropability = 0.25;
 var nstep = 0;
 var initinfect = 1;
 var tincub = 1000;
-var rateinv=5;
-var delsick=maxsick/rateinv;
+var rateinv=500;
+var trecover=10; // time to recover after passing incubation time
+var delsick;
+var delrec;
 
 //--- measurement variables
 var ndead;
@@ -125,9 +127,9 @@ function parti(x, y, vx, vy, rad, infval) {
             
             // what to do if a particle passed incubation time..
             if (this.infectime>tincub) {
-                this.sick-=delsick;
+                this.sick-=delrec;
                 // if recovered after infected...
-                if (this.sick<delsick) {
+                if (this.sick<delrec) {
                     this.immune=true;
                     this.sick=0;
                 }
@@ -156,12 +158,13 @@ function parti(x, y, vx, vy, rad, infval) {
     }
     
     this.draw = function() {
-        c=Math.floor((clevel.length-1)*this.sick/maxsick);
         
+        // this is to avoid walking deads..
+        c=Math.floor((clevel.length-1)*this.sick/maxsick);
         if (this.dead) {
             ctx.fillStyle = 'black';
             ctx.strokeStyle = 'black';
-        } else {
+        } else { 
             ctx.fillStyle = clevel[c];        
             ctx.strokeStyle = clevel[c];
         }
@@ -230,7 +233,8 @@ function initiate() {
         // initial infected number
         i=Math.floor(Math.random()*(npar-1));
         if (p[i].sick==0) {
-            p[i].sick=Math.floor(Math.random()*100);
+            // p[i].sick=Math.floor(Math.random()*maxsick);
+            p[i].sick=maxsick/2; // take in the middle of syndrome
             ni++;
         }
     }
@@ -317,6 +321,7 @@ function checkending() {
         datastr+=   "#cprob "+curepropability+"\n";
         datastr+=   "#xrad "+rexpos+"\n";
         datastr+=   "#inctime "+tincub+"\n";
+        datastr+=   "#rectime "+trecover+"\n";
         datastr+=   "#initinf "+initinfect+"\n";
         datastr+=   "#FIELDS: time infected uninfected cured dead infectionlevel\n";
 
@@ -391,6 +396,7 @@ function restart() {
     rateinv=getval('rateinv');
     rexpos=getval('xrad');
     tincub=getval('tincub');
+    trecover=getval('trecover');
     initinfect=getval('initinf');
     
     rex2=rexpos*rexpos;
@@ -401,6 +407,7 @@ function restart() {
     nimmune = 0;
     nstep = 0;
     delsick=maxsick/rateinv;
+    delrec=maxsick/trecover;
     simends=false;
     
     infarr.x=[0];

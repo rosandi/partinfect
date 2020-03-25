@@ -7,7 +7,7 @@
 body {
   font-family: arial, sans-serif;
   text-align: justify;
-  font-size: 0.8em;
+  font-size: 1em;
 }
 
 table {
@@ -95,6 +95,10 @@ p {
     </td><td class='noborder'>
     <input type="number" id="tincub" min="5" max="5000" value="1000">    
     </td></tr><tr><td class='noborder'>
+    <label for="trecover">recovery time:</label>
+    </td><td class='noborder'>
+    <input type="number" id="trecover" min="5" max="5000" value="100">    
+    </td></tr><tr><td class='noborder'>
     <label for="initinf">initial infected:</label>
     </td><td class='noborder'>
     <input type="number" id="initinf" min="0" max="10" value="1">    
@@ -180,6 +184,14 @@ the maximum illness value, and the health worsening probability.
 <tr>
 <td style="text-align: left;">infection growth time</td>
 <td style="text-align: left;">the time that the change of healt level evaluated</td>
+</tr>
+<tr>
+<td style="text-align: left;">incubation time</td>
+<td style="text-align: left;">the time of virus incubation inside a particle</td>
+</tr>
+<tr>
+<td style="text-align: left;">recovery time</td>
+<td style="text-align: left;">the time needed to recover and become immune<br>after passing incubation time</td>
 </tr>
 <tr>
 <td style="text-align: left;">expossure radius</td>
