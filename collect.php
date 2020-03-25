@@ -6,7 +6,8 @@ $fname="./data/".date("Y-m-d-H-i-s").".dat";
 $dfl=fopen($fname,"w");
 $st=file_get_contents('php://input');
 fwrite($dfl,$st);
-fclose($dfl);    
+fclose($dfl);
+system("gzip $fname");
 echo "data accepted";
 ?>
 </body>

@@ -21,6 +21,7 @@ const maxv2=maxvel*maxvel;
 const simspeed = 20;
 const plotevery = 50;
 
+var p; // the particles
 var npar = 200;
 var rexpos=2;
 var rex2=rexpos*rexpos;
@@ -28,7 +29,6 @@ var maxinfectionlevel=maxsick*npar;
 var worseprobability = 0.75;
 var curepropability = 0.25;
 var nstep = 0;
-var initinfect = 1;
 var tincub = 1000;
 var rateinv=500;
 var trecover=10; // time to recover after passing incubation time
@@ -36,6 +36,8 @@ var delsick;
 var delrec;
 var lat=undefined;
 var lon=undefined;
+var initinfect;
+var initimmune;
 
 //--- measurement variables
 var ndead;
@@ -56,7 +58,7 @@ var curarr = {
     x: [0],
     y: [0],
     type: 'scatter',
-    name: '#cured'
+    name: '#immune'
 };
 
 var levarr = {
@@ -218,8 +220,6 @@ function parti(x, y, vx, vy, rad, infval) {
     
 }
 
-var p;
-
 function initiate() {
     p=new Array(npar);
     for (i=0; i<npar;i++) {
@@ -240,6 +240,17 @@ function initiate() {
             ni++;
         }
     }
+    
+    ni=0;
+    while (ni<initimmune) {
+        // initial immune number
+        i=Math.floor(Math.random()*(npar-1));
+        if (!p[i].immune) {
+            p[i].immune=true;
+            ni++;
+        }
+    }
+
 }
 
 // choose who is ill
@@ -404,13 +415,13 @@ function restart() {
     tincub=getval('tincub');
     trecover=getval('trecover');
     initinfect=getval('initinf');
+    initimmune=getval('initimm');
     
     rex2=rexpos*rexpos;
     ninfected=initinfect;
     infectionlevel=0;
     maxinfectionlevel=maxsick*npar;
     ncured = 0;
-    nimmune = 0;
     nstep = 0;
     delsick=maxsick/rateinv;
     delrec=maxsick/trecover;
@@ -419,7 +430,7 @@ function restart() {
     infarr.x=[0];
     infarr.y=[0];
     curarr.x=[0];
-    curarr.y=[0];
+    curarr.y=[100*initimmune/npar];
     deadarr.x=[0];
     deadarr.y=[0];
     levarr.x=[0];
