@@ -151,8 +151,9 @@ the expossure distance.
 There is a chance that an ill particle become healthier (defined by the
 cure-probability), however, once a particle become infected, the condition
 will be worsened as a function of time.  The rate of change of the health
-condition is defined by the infection growth time, which is the time required to reach
-the maximum illness value, and the health worsening probability.
+condition is defined by the infection growth time --the time required to reach
+the maximum illness value-- and the health worsening probability. After a particle passes 
+the incubation time, it recovers to a healthy status with rate defined by the recovery time.
 </p>
 
 <h2>Parameters</h2>
@@ -242,7 +243,7 @@ the maximum illness value, and the health worsening probability.
     href=https://github.com/rosandi/partinfect>GitHub</a>, 
     made public under GNU General Public License
     v3.0<br>
-    Comments can be sent to: rosandi@geophys.unpad.ac.id
+    Comments, ideas, or suggestions can be sent to: rosandi-at-geophys.unpad.ac.id
 </p>
 </body>
 </html>
