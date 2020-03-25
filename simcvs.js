@@ -79,7 +79,7 @@ var noinarr = {
     x: [0],
     y: [100],
     type: 'scatter',
-    name: '#non-infected'
+    name: '#uninfected'
 };
 
 var layout = {
@@ -235,8 +235,9 @@ function initiate() {
         // initial infected number
         i=Math.floor(Math.random()*(npar-1));
         if (p[i].sick==0) {
-            // p[i].sick=Math.floor(Math.random()*maxsick);
-            p[i].sick=maxsick/2; // take in the middle of syndrome
+//          p[i].sick=maxsick/2; // take in the middle of syndrome
+            p[i].infectime=Math.random()*rateinv; // somewhere before fatality level
+            p[i].sick=delsick*p[i].infectime; // relates to infection time 
             ni++;
         }
     }
@@ -245,7 +246,7 @@ function initiate() {
     while (ni<initimmune) {
         // initial immune number
         i=Math.floor(Math.random()*(npar-1));
-        if (!p[i].immune) {
+        if (!p[i].immune && p[i].sick==0) {
             p[i].immune=true;
             ni++;
         }
@@ -444,11 +445,13 @@ function restart() {
     Plotly.newPlot('plot',data,layout);
 }
 
+/* I think we still don't need this.
 if(navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition=function(position) {
         lat=position.coords.latitude;
         lon=position.coords.longitude;
     });
 }
+*/
 
 restart();

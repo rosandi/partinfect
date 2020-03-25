@@ -1,7 +1,7 @@
 <html>
 <head>
 <title>infection</title>
-<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<script src='plotly.js'></script>
 <style>
 
 body {
@@ -126,12 +126,15 @@ p {
 <p>
     This simulation shows why you need to STAY@HOME whenever an infectious
     disease outbreak occurs. <br>
-    In the calculation all quantities are unitless. The following configuration may be
+    In the calculation all quantities are unitless. The following settings may be
     used:<br>
-    TIME: hour <br>DISTANCE: meter.<br>
+    TIME: hour <br>DISTANCE: meter<br>
+    The container size is 500x500 <br>
+    <p>
     Color code: <font style="color:#00FF00">GREEN</font> healthy; 
     <font style="color:#FF0000">RED</font> ill; BLACK dead; <br>
-     HAIRY infected; CIRCLED immune; 
+    HAIRY infected; CIRCLED immune; 
+    </p>
 
 <h2>Simulation method</h2> 
 
@@ -139,7 +142,7 @@ p {
 We take a number of noninteracting particles moving with random velocity
 inside a container.  The illness level (health level) of every particles is
 recorded as a number between 0 to 100 which represents healthy to very sick
-condition.  Every time a particle getting too close to another particle, its
+condition.  Every time a particle getting too close to another, its
 health level will decrease according to the condition of the other particle. 
 A contact between two healthy particles will not change the health
 conditions.  The distance that may infect a healthy particle is defined by
