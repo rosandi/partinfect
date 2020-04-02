@@ -384,9 +384,15 @@ function update() {
     detect();
     checkending();
     nstep++;
+    
+    if (simends || nstep % plotevery==0) plotdata();
 
-    if (simends ||(nstep % plotevery==0)) plotdata();
-    if (simends) savedata();    
+    if (simends) {
+        var pattern=/^file:/i;
+        if (window.location.href.match(pattern)) {
+            console.log("not saving the data in this url");
+        } else savedata() 
+    }
 
 }
 
