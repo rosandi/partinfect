@@ -38,6 +38,7 @@ var lat=undefined;
 var lon=undefined;
 var initinfect;
 var initimmune;
+var delt=0.01;
 
 //--- measurement variables
 var ndead;
@@ -104,6 +105,8 @@ function parti(x, y, vx, vy, rad, infval) {
     this.y = Math.floor(y);
     this.vx = vx;
     this.vy = vy;
+    this.fx = 0;
+    this.fy = 0;
     this.rad = rad;
     this.sick = 0;
     this.infectime=0;
@@ -116,7 +119,9 @@ function parti(x, y, vx, vy, rad, infval) {
             if(ngsick>0) {
                 // the probability to get sick is proportional to the
                 // level of illness of contacted person
-                if(Math.random()<(ngsick/maxsick)) this.sick++;
+                //if(Math.random()<(ngsick/maxsick)) this.sick+=delsick;
+                // of just infected
+                this.sick=delsick;
             }
         } 
     }
@@ -125,8 +130,9 @@ function parti(x, y, vx, vy, rad, infval) {
     
     this.healthcondition = function() {
         if (this.immune) return;
+        if (this.dead) return;
         
-        if (this.sick>0) { // if not healthy
+        if (this.sick>0.0) { // if not healthy
             this.infectime++;
             
             // what to do if a particle passed incubation time..
@@ -157,7 +163,6 @@ function parti(x, y, vx, vy, rad, infval) {
                     this.sick=0;
                 }
             }
-
         }
     }
     
@@ -199,23 +204,17 @@ function parti(x, y, vx, vy, rad, infval) {
     
     this.update = function() {
         if (!this.dead) {
-            this.x+=this.vx;
-            this.y+=this.vy;
+            this.x+=this.vx*delt;
+            this.y+=this.vy*delt;
+            
             if(this.x < 0) this.x+=w;
             if(this.x > w) this.x-=w;
             if(this.y < 0) this.y+=h;
             if(this.y > h) this.y-=h;
-            
-            // alter velocity
-            this.vx+=(Math.random()-0.5);
-            this.vy+=(Math.random()-0.5);        
-            
             if(this.vx*this.vx > maxv2) this.vx=Math.sign(this.vx)*maxvel;
             if(this.vy*this.vy > maxv2) this.vy=Math.sign(this.vy)*maxvel;
             
-            this.healthcondition();
         }
-        this.draw();
     }
     
 }
@@ -255,23 +254,45 @@ function initiate() {
 }
 
 // choose who is ill
+// particle radius square
+// we use hard sphere collision simulation
+var rad=10-0
+var rad2=rad*rad;
 
-function checkneigh() {
+// this algoritm is bad when npar is large
+function interact() {
     for (i=0; i<npar-1; i++) {
         if (p[i].dead) continue;
         for (j=i+1; j<npar; j++) {
             if (p[j].dead) continue;
-            dx=p[j].x-p[i].x;
-            dy=p[j].y-p[i].y;
-            r2=dx*dx+dy*dy;
+            var dx=p[j].x-p[i].x;
+            var dy=p[j].y-p[i].y;
+            var dvx=p[j].vx-p[i].vx;
+            var dvy=p[j].vy-p[i].vy;
+            var r2=dx*dx+dy*dy;
+            if(r2<rad2) {
+                var v2=dvx*dvx+dvy*dvy;
+                var dr=Math.sqrt(r2);
+                var dv=Math.sqrt(v2);
+                var f=(dv*dr)/rad;
+                p[i].vx-=f*dx;
+                p[i].vy-=f*dy;
+                p[j].vx+=f*dx;
+                p[j].vy+=f*dy;
+            }
+            
+            p[i].update();
+            p[j].update();
+            
             if(r2<rex2) {
                 p[i].exposed(p[j].sick);
                 p[j].exposed(p[i].sick);
             }
         }
     }
+    
+    for(i=0;i<npar;i++) p[i].healthcondition();
 }
-
 
 function setstatus(elid,txt) {
     document.getElementById(elid).innerHTML=txt;
@@ -376,17 +397,13 @@ function update() {
     ctx.fillStyle = "white";
     ctx.fillRect(0,0,w,h);
     
-    for (i=0;i<npar;i++) {
-        p[i].update();
-    }
-    
-    checkneigh();
+    interact();
     detect();
     checkending();
     nstep++;
-    
-    if (simends || nstep % plotevery==0) plotdata();
 
+    for (i=0;i<npar;i++) p[i].draw();    
+    if (simends || nstep % plotevery==0) plotdata();
     if (simends) {
         var pattern=/^file:/i;
         if (window.location.href.match(pattern)) {
